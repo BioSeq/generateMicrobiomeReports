@@ -52,23 +52,24 @@ def readData(INPUT_FILENAME):
 	aggregateCounts = [map(int, x) for x in aggregateCounts] #convert aggregate counts to int
 	return (listOfSamples, listOfGenus, aggregateCounts)
 
+def makeDictOfTopGenus(aggregateCounts, listOfSamples, listOfGenus):
 #convert aggregate counts to presence/absence calls for each genus
 #make a list of sets, each set contains the ten most abundent genus in each sample
 #requires aggregateCounts, listOfGenus, listOfSamples
-def makeDictOfTopGenus(aggregateCounts, listOfSamples, listOfGenus):
 	listOfMostAbundantGenus = []
 	for samplewiseAggregateCounts in aggregateCounts:
 		listOfMaxValueIndexes = []
-		mostAbundantGenus = set() #initializes the set that will contain the 10 most abundent genus
+		mostAbundantGenus = []#initializes the list that will contain the 10 most abundent genus
 		totalAggregateCounts = sum(samplewiseAggregateCounts)		
 		for x in range(10):
 			highestNumOfAggregateCounts = max(samplewiseAggregateCounts)
 			currIndex = samplewiseAggregateCounts.index(highestNumOfAggregateCounts)
-			mostAbundantGenus.add((listOfGenus[currIndex],float(highestNumOfAggregateCounts)/float(totalAggregateCounts)))
+			mostAbundantGenus.append((listOfGenus[currIndex],float(highestNumOfAggregateCounts)/float(totalAggregateCounts)))
 			samplewiseAggregateCounts[currIndex] = 0
 		otherAggregateCounts = sum(samplewiseAggregateCounts)
-		mostAbundantGenus.add(('Other',float(otherAggregateCounts)/float(totalAggregateCounts)))
+		mostAbundantGenus.append(('Other',float(otherAggregateCounts)/float(totalAggregateCounts)))
 		listOfMostAbundantGenus.append(mostAbundantGenus)
+		listOfMostAbundantGenus.sort(reverse= True) #ensures we sorted correctly
 	#zip these sets into a dictionary {key = sample name: value = set of most abundant genus}
 	dictOfSampleNamesTopGenus = dict(zip(listOfSamples,listOfMostAbundantGenus))
 	return dictOfSampleNamesTopGenus
