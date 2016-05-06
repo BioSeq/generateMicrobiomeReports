@@ -50,16 +50,17 @@ def makeDictOfTopGenus(aggregateCounts, listOfSamples, listOfGenus):
 	listOfMostAbundantGenus = []
 	for samplewiseAggregateCounts in aggregateCounts:
 		listOfMaxValueIndexes = []
-		mostAbundantGenus = set() #initializes the set that will contain the 10 most abundent genus
+		mostAbundantGenus = []#initializes the list that will contain the 10 most abundent genus
 		totalAggregateCounts = sum(samplewiseAggregateCounts)		
 		for x in range(10):
 			highestNumOfAggregateCounts = max(samplewiseAggregateCounts)
 			currIndex = samplewiseAggregateCounts.index(highestNumOfAggregateCounts)
-			mostAbundantGenus.add((listOfGenus[currIndex],float(highestNumOfAggregateCounts)/float(totalAggregateCounts)))
+			mostAbundantGenus.append((listOfGenus[currIndex],float(highestNumOfAggregateCounts)/float(totalAggregateCounts)))
 			samplewiseAggregateCounts[currIndex] = 0
 		otherAggregateCounts = sum(samplewiseAggregateCounts)
-		mostAbundantGenus.add(('Other',float(otherAggregateCounts)/float(totalAggregateCounts)))
+		mostAbundantGenus.append(('Other',float(otherAggregateCounts)/float(totalAggregateCounts)))
 		listOfMostAbundantGenus.append(mostAbundantGenus)
+		listOfMostAbundantGenus.sort(reverse= True) #ensures we sorted correctly
 	#zip these sets into a dictionary {key = sample name: value = set of most abundant genus}
 	dictOfSampleNamesTopGenus = dict(zip(listOfSamples,listOfMostAbundantGenus))
 	return dictOfSampleNamesTopGenus
