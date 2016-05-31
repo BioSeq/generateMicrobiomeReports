@@ -14,6 +14,8 @@ require(plotrix)
 # get the csv file
 genuscounts <<- read.csv(file.choose(), header = TRUE, sep = ",")
 
+pdf(file = "samplegraphs.pdf", width = 8.5, height = 11, onefile = TRUE)
+
 #loop through the data frame and find the top ten for each 
 for(i in 2:ncol(genuscounts)) {
     thisColumn <- genuscounts[,c(1,i)]
@@ -27,25 +29,20 @@ for(i in 2:ncol(genuscounts)) {
   lbls = paste(lbls,as.character(slices))
   lbls = paste(lbls,"%",sep="")
 
-  # output and aesthetics 
-  outputDir = "Users/hannahvoelker/Documents/BioSeq"
   samplename = names(genuscounts[i])
-  #remove punct from sample name
-  samplename <- gsub("[[:punct:]]","", samplename)
-  filename = paste(outputDir, as.character(samplename), ".png", sep ="")
+
   colors = rainbow(length(slices))
-  pie(slices, '', radius = 0.6, col=colors, main=samplename, cex.main=5, mai=c(0.2,0,2,0.2),family="serif")
+  pie(slices, '', radius = 0.6, col=colors, main=samplename, cex.main=6.0, mai=c(0.2,0.2,0.2),family="serif")
   # can use font.main = '' to adjust the font of main title
-  x= 0.8
-  y= 0.6
-  legend(x,y, lbls, cex=3.6, fill=colors)
+  x= -0.5
+  y= -0.65
+  legend(x,y, lbls, cex=1.0, fill=colors)
   textX = 0
   textY = 0.95
-  text(textX,textY,'This sample\'s microbiome, broken down by genus:', cex=4.7, font=4, family="serif")
-  textX = -1.6
-  textY = 0
-  text(textX,textY,' DISCLAIMER:\n Results cannot be\n used to draw any\n conclusions about\n health information.', cex=4, adj=c(0,NA), font=3, family="serif")
-  dev.off()
-  png(file = filename, height=1200, width=2200)
+  text(textX,textY,'This sample\'s microbiome, broken down by genus:', cex=2, font=4.0, family="serif")
+  textX = 0.5
+  textY = -1.0
+  text(textX,textY,' DISCLAIMER:\n Results cannot be\n used to draw any\n conclusions about\n health information.', cex=1, adj=c(0,NA), font=0.5, family="serif")
 } 
+dev.off()
 # this is the end of the for loop
