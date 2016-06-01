@@ -10,15 +10,14 @@
 require(plotrix)
 
 genuscounts <<- read.csv(file.choose(), header = TRUE, sep = ",")
+genuspairs <<- read.table(file.choose(), header= FALSE)
 
-#we need to read in the two samples that we want to make a Venn Diagram of
-readname <- function() {
-  name <- readline(prompt = "Enter the name of sample: ")
-  name <- as.character(name)
-  return(name)
-}
-sample1 <- readname()
-sample2 <- readname()
+pdf(file= "venndiagrams.pdf", height = 11, width = 8.5, onefile = TRUE)
+#loop through the .txt file of pairs and make a Venn diagram for each
+for (j in 2:nrow(genuspairs)){
+sample1 == genuspairs[j,1]
+sample2 == genuspairs[j,2]
+
 #now loop through all the columns to find these two samples
 # set up the top ten names
 for(i in 2:ncol(genuscounts)){
@@ -31,18 +30,15 @@ for(i in 2:ncol(genuscounts)){
     topten2 <- head(thisColumn[order(thisColumn[,2], decreasing = TRUE), ], n = 10)
   }
 }
+# we have to make these samples ready for the Venn diagram
 makeVennList <- function(vennList){
   vennList <- unlist(strsplit(as.character(vennList), ","))
   indexofOther = match("Other", vennList)
-  #vennList = [-indexofOther]
   return(vennList)
 }
 vennList1 <- makeVennList(topten1[,1])
 vennList2 <- makeVennList(topten2[,1])
 
-sample1file <- gsub("[[:punct:]]", "", sample1)
-filename = paste(sample1file,".pdf",sep="")
-pdf(file=filename, height=11, width=8.5, onefile = TRUE)
 par(mfrow=c(3,1),mar=c(0,0,0,0))
 
 #parameters for layout of the Venn diagram and text
@@ -91,4 +87,5 @@ plot.new()
 drawVennDiagram(message2, sample1, "", vennList1, "")
 plot.new()
 drawVennDiagram(message2, sample2, "", vennList2, "")
+}
 dev.off()
